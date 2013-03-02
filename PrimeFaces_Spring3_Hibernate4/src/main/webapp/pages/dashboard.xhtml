@@ -1,0 +1,211 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Welcome to Spring 3 Primeface2 Hibernate4 Sample App</title>
+	<style>
+#notification {
+    position:relative;
+    top:40px; /* Set to 0 or wherever */
+    width:95%; /* set to 100% if space is available */
+    z-index:105;
+    text-align:center;
+    font-weight:normal;
+    font-size:14px;
+    font-weight:bold;
+    color:white;
+    background-color:#FF7800;
+    padding:5px;
+}
+#notification span.dismiss {
+    border:2px solid #FFF;
+    padding:0 5px;
+    cursor:pointer;
+    float:right;
+    margin-right:10px;
+}
+#notification a {
+    color:white;
+    text-decoration:none;
+    font-weight:bold
+}
+	
+	</style>
+	
+
+<script type="text/javascript">
+/* <![CDATA[ */
+$(document).ready(function() {
+
+	/*
+	$("#notification").fadeIn("slow").append('your message');
+	$(".dismiss").click(function(){
+	       $("#notification").fadeOut("slow");
+	});
+	*/
+	
+	function poll() { 
+		//$("#notification").fadeIn("slow").append('<br/>your message');
+
+	$.get('../notify', function(data) {
+
+		  /*
+		 	var cloneElement = $('#notification').clone();
+		 	cloneElement.click(function(){
+		 		cloneElement.fadeOut("slow");
+			});		 	 
+	  		cloneElement.append('sample ');
+			cloneElement.insertAfter('#notification');
+			cloneElement.fadeIn('slow');
+*/
+			 
+			var resp = jQuery.parseJSON(data);
+		
+		    $.each(data, function(key, val) {
+
+		        console.log(val.notificationMessage);
+
+				var cloneElement = $('#notification').clone();
+				cloneElement.click(function(){
+
+					/*
+				     $.ajax({
+				            type: 'GET',
+				            url: '../notify',
+				            data: 'userid=' + val.user.id +'&notificationid='+val.id,
+				            success: function(data){
+								  console.log('Load was performed.');
+								  cloneElement.fadeOut('slow');
+				     }
+				    });
+				    */
+					  console.log('Load was performed.');
+					  cloneElement.fadeOut('slow');
+
+				});
+		
+		
+				cloneElement.append(val.notificationMessage);
+				cloneElement.insertAfter('#notification');
+				cloneElement.fadeIn('slow');
+				
+		       });
+		       
+		});
+
+
+	}
+	setInterval(function(){ poll(); }, 5000);
+
+});
+/* ]]> */
+</script>
+
+</h:head>
+<h:body>
+<h:form>
+
+	<p:layout fullPage="true">
+
+		<p:layoutUnit position="north" size="100" resizable="true"
+			closable="false" collapsible="true">
+			<h2 align="center">
+				<h:outputText value="Welcome to My Dashboard." />
+			</h2>
+		</p:layoutUnit>
+		<p:layoutUnit position="west" size="375" header="Project Quick Links"
+			resizable="true" closable="false" collapsible="true">
+
+			<p:accordionPanel>
+				<p:tab title="Calendar">
+					<br />
+					<p:calendar mode="inline" navigator="none" size="1" />
+					<br />
+				</p:tab>
+
+				<p:tab title="Reports">
+					<h:outputText value="All reports just click away" />
+				</p:tab>
+
+				<p:tab title="Charts">
+					<h:outputText value="Any fancy chart you can think of." />
+				</p:tab>
+			</p:accordionPanel>
+		</p:layoutUnit>
+
+		<p:layoutUnit position="east" size="350" header="Notifications"
+			resizable="true" closable="false" collapsible="true" effect="drop">
+			<div id="notification" style="display: none;">
+			  <span class="dismiss"><a title="dismiss this notification">X</a></span>
+			</div>
+		</p:layoutUnit>
+
+		<p:layoutUnit position="center" header="Your Dashboard">    
+            Welcome Sudhakar.
+            <br></br>
+			<br></br>
+
+			
+				<p:growl id="growl" showDetail="true" />
+				<p:dashboard id="board" model="#{dashboardBean.model}">
+
+					<p:ajax event="reorder" listener="#{dashboardBean.handleReorder}"
+						update="growl" />
+
+					<p:panel id="sales" header="Sales Statistics">
+						<p:tooltip for="sales"  value="Fade effect is used by default" showEffect="fade" hideEffect="fade" />
+							
+					    <p:pieChart id="pieChart" value="#{chartBean.pieModel}" legendPosition="w"
+					            title="Sales Count (2012)" style="width:400px;height:300px">
+					        <p:ajax event="itemSelect" listener="#{chartBean.itemSelect}" update="growl" />
+					    </p:pieChart>	
+					      					
+					</p:panel>
+
+					<p:panel id="revenue" header="Revenue Statistics">
+					   
+					    <p:barChart id="barChart"  value="#{chartBean.categoryModel}" legendPosition="ne"
+					            title="Revenue" style="height:300px">
+					        <p:ajax event="itemSelect" listener="#{chartBean.itemSelect}" update="growl" />
+					    </p:barChart>			
+					     	      						
+					</p:panel>
+
+					<p:panel id="connection" header="Current Cable Connections">
+						<h:outputText value="Lifestyle Content" />
+					</p:panel>
+
+					<p:panel id="disconnections" header="Disconnect Statistics">
+						<h:outputText value="Disconnect Statistics" />
+					</p:panel>
+
+					<p:panel id="newconnection" >
+					<p:pieChart id="custom" value="#{chartBean.pieModel}" legendPosition="e" fill="false" showDataLabels="true"
+                		title="New Wins (2013)" style="width:400px;height:300px" sliceMargin="5" diameter="150" />
+						
+					</p:panel>
+
+				</p:dashboard>
+			
+
+		</p:layoutUnit>
+
+		<p:layoutUnit position="south" size="100" resizable="true"
+			closable="false" collapsible="true">
+			<p:dock itemWidth="100">
+				<p:menuitem value="Home" icon="/images/dock/home.png"  url="../pages/dashboard.xhtml"/>
+				<p:menuitem value="Admin" icon="/images/dock/admin.png" url="#"/>
+				<p:menuitem value="Reports" icon="/images/dock/report.png" url="#"/>
+				<p:menuitem value="RSS" icon="/images/dock/rss.png" url="#"/>
+			
+			</p:dock>			
+		</p:layoutUnit>
+	</p:layout>
+	
+</h:form>
+
+         
+</h:body>
+
+</html>
