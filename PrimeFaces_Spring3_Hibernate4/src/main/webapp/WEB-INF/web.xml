@@ -54,4 +54,14 @@
     <servlet-name>NotificationServlet</servlet-name>
     <url-pattern>/notify</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>NotificationRssServlet</display-name>
+    <servlet-name>NotificationRssServlet</servlet-name>
+    <servlet-class>com.servlet.NotificationRssServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NotificationRssServlet</servlet-name>
+    <url-pattern>/rss</url-pattern>
+  </servlet-mapping>
 </web-app>

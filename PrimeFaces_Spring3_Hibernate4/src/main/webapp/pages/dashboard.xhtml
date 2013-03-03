@@ -4,6 +4,9 @@
 	xmlns:p="http://primefaces.org/ui">
 <h:head>
 	<title>Welcome to Spring 3 Primeface2 Hibernate4 Sample App</title>
+		<script type="text/javascript" src="../fancybox/jquery.fancybox.js"></script>
+	
+	<link rel="stylesheet" href="../fancybox/jquery.fancybox.css" type="text/css" media="screen" />
 	<style>
 #notification {
     position:relative;
@@ -30,6 +33,9 @@
     text-decoration:none;
     font-weight:bold
 }
+.ui-datepicker-inline{
+	width:200px;
+}
 	
 	</style>
 	
@@ -37,6 +43,19 @@
 <script type="text/javascript">
 /* <![CDATA[ */
 $(document).ready(function() {
+	$("#single_image").fancybox();
+
+	$(".fancypdf").click(function(){
+		 $.fancybox({
+		   type: 'html',
+		   autoSize: false,
+		   content: '<embed src="'+this.href+'#nameddest=self&page=1&view=FitH,0&zoom=80,0,0" type="application/pdf" height="99%" width="100%" />',
+		   beforeClose: function() {
+		     $(".fancybox-inner").unwrap();
+		   }
+		 }); //fancybox
+		 return false;
+		});
 
 	/*
 	$("#notification").fadeIn("slow").append('your message');
@@ -114,18 +133,28 @@ $(document).ready(function() {
 				<h:outputText value="Welcome to My Dashboard." />
 			</h2>
 		</p:layoutUnit>
-		<p:layoutUnit position="west" size="375" header="Project Quick Links"
+		<p:layoutUnit position="west" size="300" header="Project Quick Links"
 			resizable="true" closable="false" collapsible="true">
 
 			<p:accordionPanel>
 				<p:tab title="Calendar">
 					<br />
-					<p:calendar mode="inline" navigator="none" size="1" />
+					<p:calendar mode="inline" navigator="none" size="1"  style="width:250px"/>
 					<br />
 				</p:tab>
 
 				<p:tab title="Reports">
-					<h:outputText value="All reports just click away" />
+					<img id="single_image" src="http://localhost:8080/prime/images/dock/home.png"/>						
+				    <p:tree value="#{treeBean.root}" var="node" id="tree" style="width:200px;">
+				        <p:treeNode id="treeNode">				        	
+							<h:outputLink class="fancypdf"  id="amazonLink" value="http://localhost:8080/prime/pdf/sample.pdf">
+							  #{node}
+							</h:outputLink>				           
+				     
+				        </p:treeNode>
+				    </p:tree>
+					
+					
 				</p:tab>
 
 				<p:tab title="Charts">
@@ -134,7 +163,7 @@ $(document).ready(function() {
 			</p:accordionPanel>
 		</p:layoutUnit>
 
-		<p:layoutUnit position="east" size="350" header="Notifications"
+		<p:layoutUnit position="east" size="250" header="Notifications"
 			resizable="true" closable="false" collapsible="true" effect="drop">
 			<div id="notification" style="display: none;">
 			  <span class="dismiss"><a title="dismiss this notification">X</a></span>
@@ -157,7 +186,7 @@ $(document).ready(function() {
 						<p:tooltip for="sales"  value="Fade effect is used by default" showEffect="fade" hideEffect="fade" />
 							
 					    <p:pieChart id="pieChart" value="#{chartBean.pieModel}" legendPosition="w"
-					            title="Sales Count (2012)" style="width:400px;height:300px">
+					            title="Sales Count (2012)" style="width:300px;height:200px">
 					        <p:ajax event="itemSelect" listener="#{chartBean.itemSelect}" update="growl" />
 					    </p:pieChart>	
 					      					
@@ -182,7 +211,7 @@ $(document).ready(function() {
 
 					<p:panel id="newconnection" >
 					<p:pieChart id="custom" value="#{chartBean.pieModel}" legendPosition="e" fill="false" showDataLabels="true"
-                		title="New Wins (2013)" style="width:400px;height:300px" sliceMargin="5" diameter="150" />
+                		title="New Wins (2013) in 1000s" style="width:400px;height:300px" sliceMargin="5" diameter="150" dataFormat="value"/>
 						
 					</p:panel>
 
@@ -197,7 +226,7 @@ $(document).ready(function() {
 				<p:menuitem value="Home" icon="/images/dock/home.png"  url="../pages/dashboard.xhtml"/>
 				<p:menuitem value="Admin" icon="/images/dock/admin.png" url="#"/>
 				<p:menuitem value="Reports" icon="/images/dock/report.png" url="#"/>
-				<p:menuitem value="RSS" icon="/images/dock/rss.png" url="#"/>
+				<p:menuitem value="RSS" icon="/images/dock/rss.png" url="../rss"/>
 			
 			</p:dock>			
 		</p:layoutUnit>
